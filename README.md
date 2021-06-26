@@ -2,6 +2,12 @@
 
 This repository holds code to compute model averaged predictive distributions for accruals. It provides the necessary materials to replicate and extend the approach as proposed in *"Accounting for Uncertainty: An Application of Bayesian Methods to Accruals Models"*.
 
+The code is free to use. Comments, suggestions for improvements, and reporting of issues are welcome.
+
+## Non-discretionary accrual estimates
+
+Posterior means and standard deviations from the averaged model (The one described in Table 6 in the paper) can be found in the folder `accruals/`. `NDA` is the posterior mean and `NDA_sd` is the posterior standard deviation. We intend to add an updated version on a yearly basis.
+
 ## How to use this repository
 
 The code is organized into an RStudio project. While nearly all of the code is written in R, the models are coded in [Stan](https://mc-stan.org/) and all MCMC calculations are performed by Stan.
@@ -93,4 +99,4 @@ Finally, all scripts are set up to use with a RStudio project in the root folder
 
 ## Installing cmdstan for use with STATA
 
-We provide some code to run Bayesian computations using Stata as well. Getting Stata to play nicely with Stan is not completely trivial, but there are bindings called [StataStan](https://mc-stan.org/users/interfaces/stata-stan.html). We provide a short manual for setting up cmdstan for use with Stata in the `doc/` folder. The rest is explained at the StataStan homepage.
+Stan is easiest to use with R or Python. We provide some code to run Bayesian computations using Stata as well. Getting Stata to play nicely with Stan is not completely trivial, but there are bindings called [StataStan](https://mc-stan.org/users/interfaces/stata-stan.html). We provide a short manual for setting up cmdstan for use with Stata in the `doc/` folder. The rest is explained at the StataStan homepage.
