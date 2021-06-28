@@ -2,9 +2,9 @@ data{
   int<lower=1> N;                  // num obs
   int<lower=1> J;                  // num firms
   int<lower=1> K;                  // num coefficients
-  int<lower=1, upper=J> FirmID[N]; // FirmID for obs
+  int<lower=1, upper=J> GroupID[N]; // GroupID for obs, e.g. FirmID or Industry-YearID
   vector[N] TA;                    // Outcome total accruals
-  matrix[N, K] x;                  // Predictors InAt, ChRev, PPE
+  matrix[N, K] x;                  // Predictors InAt, ChRev, PPE, etc.
 }
 parameters{
   matrix[K, J] z;                  // standard normal sampler
@@ -24,22 +24,19 @@ model{
   mu_b  ~ normal(0, 2.5);
   sigma ~ exponential(1);
   tau ~ exponential(1);
-  TA ~ normal(rows_dot_product(b[FirmID] , x), sigma);
+  TA ~ normal(rows_dot_product(b[GroupID] , x), sigma);
 }
 generated quantities {
-  vector[N] y_fit;
   vector[N] y_fit_wo;
   vector[N] log_lik;
   for ( i in 1:N ) {
-    y_fit[i] = normal_rng(b[FirmID[i], 1] * x[i,1] +
-                          b[FirmID[i], 2] * x[i,2] +
-                          b[FirmID[i], 3] * x[i,3], sigma);
-    y_fit_wo[i] = b[FirmID[i], 1] * x[i,1] +
-                  b[FirmID[i], 2] * x[i,2] +
-                  b[FirmID[i], 3] * x[i,3];
-    log_lik[i] = normal_lpdf(TA[i] | b[FirmID[i], 1] * x[i,1] +
-                                     b[FirmID[i], 2] * x[i,2] +
-                                     b[FirmID[i], 3] * x[i,3], sigma);
+
+    y_fit_wo[i] = 0;
+    for (k in 1:K) {
+      y_fit_wo[i] = y_fit_wo[i] + b[GroupID[i], k] * x[i, k];
+    }
+
+    log_lik[i] = normal_lpdf(TA[i] | y_fit_wo[i], sigma);
   }
 }
 
